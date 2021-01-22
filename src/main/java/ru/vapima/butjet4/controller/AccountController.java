@@ -10,6 +10,7 @@ import ru.vapima.butjet4.dto.account.AccountDto;
 import ru.vapima.butjet4.dto.account.AccountEditDto;
 import ru.vapima.butjet4.service.AccountService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/users/{id_user}/accounts")
@@ -21,7 +22,7 @@ public class AccountController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto save(@RequestBody AccountAddDto accountAddDto, @PathVariable("id_user") Long idUser) {
+    public AccountDto save(@RequestBody @Valid AccountAddDto accountAddDto, @PathVariable("id_user") Long idUser) {
         return accountService.addAccount(accountAddDto, idUser);
     }
 
@@ -45,7 +46,7 @@ public class AccountController {
 
 
     @PatchMapping("/{id}")
-    public AccountDto update(@RequestBody AccountEditDto accountEditDto, @PathVariable("id") Long id, @PathVariable("id_user") Long idUser) {
+    public AccountDto update(@RequestBody @Valid AccountEditDto accountEditDto, @PathVariable("id") Long id, @PathVariable("id_user") Long idUser) {
         return accountService.updateAccount(accountEditDto, id, idUser);
     }
 }

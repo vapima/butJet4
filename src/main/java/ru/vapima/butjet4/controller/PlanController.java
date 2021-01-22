@@ -10,6 +10,7 @@ import ru.vapima.butjet4.dto.plan.PlanDto;
 import ru.vapima.butjet4.dto.plan.PlanEditDto;
 import ru.vapima.butjet4.service.PlanService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/users/{id_user}/plans")
@@ -21,7 +22,7 @@ public class PlanController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PlanDto save(@RequestBody PlanAddDto planAddDto, @PathVariable("id_user") Long idUser) {
+    public PlanDto save(@RequestBody @Valid PlanAddDto planAddDto, @PathVariable("id_user") Long idUser) {
         return planService.addPlan(planAddDto, idUser);
     }
 
@@ -45,7 +46,7 @@ public class PlanController {
 
 
     @PatchMapping("/{id}")
-    public PlanDto update(@RequestBody PlanEditDto planEditDto, @PathVariable("id") Long id, @PathVariable("id_user") Long idUser) {
+    public PlanDto update(@RequestBody @Valid PlanEditDto planEditDto, @PathVariable("id") Long id, @PathVariable("id_user") Long idUser) {
         return planService.updatePlan(planEditDto, id, idUser);
     }
 }

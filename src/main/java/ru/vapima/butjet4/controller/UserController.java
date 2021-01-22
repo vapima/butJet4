@@ -11,6 +11,8 @@ import ru.vapima.butjet4.dto.user.UserEditDto;
 import ru.vapima.butjet4.dto.user.UserRegistartionDto;
 import ru.vapima.butjet4.service.UserService;
 
+
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -23,7 +25,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto save(@RequestBody UserRegistartionDto userRegistartionDto) {
+    public UserDto save(@RequestBody @Valid UserRegistartionDto userRegistartionDto) {
         return userService.addUser(userRegistartionDto);
     }
 
@@ -44,7 +46,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}")
-    public UserDto update(@RequestBody UserEditDto userEditDto, @PathVariable("id") Long id) {
+    public UserDto update(@RequestBody @Valid UserEditDto userEditDto, @PathVariable("id") Long id) {
         return userService.updateUser(userEditDto, id);
     }
 }

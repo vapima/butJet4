@@ -1,4 +1,4 @@
-package ru.vapima.butjet4.service;
+package ru.vapima.butjet4.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +11,7 @@ import ru.vapima.butjet4.model.db.Plan;
 import ru.vapima.butjet4.model.db.User;
 import ru.vapima.butjet4.repository.PlanRepository;
 import ru.vapima.butjet4.repository.UserRepository;
+import ru.vapima.butjet4.service.PlanService;
 
 import java.util.List;
 import java.util.stream.Collectors;
