@@ -1,4 +1,4 @@
-package ru.vapima.butjet4.dto;
+package ru.vapima.butjet4.dto.accountRecord;
 
 import lombok.*;
 
@@ -9,9 +9,8 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-public class AccountRecordDto {
-    private Long id;
+@EqualsAndHashCode
+public class AccountRecordEditDto {
     private Long amount;
     private String description;
     private LocalDateTime dateTime;

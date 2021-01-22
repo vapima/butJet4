@@ -5,7 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.vapima.butjet4.dto.AccountRecordDto;
+import ru.vapima.butjet4.dto.accountRecord.AccountRecordAddDto;
+import ru.vapima.butjet4.dto.accountRecord.AccountRecordDto;
+import ru.vapima.butjet4.dto.accountRecord.AccountRecordEditDto;
 import ru.vapima.butjet4.service.AccountRecordService;
 
 import java.util.List;
@@ -20,8 +22,8 @@ public class AccountRecordController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountRecordDto save(@RequestBody AccountRecordDto accountRecordDto, @PathVariable("id_acc") Long idAccount, @PathVariable("id_user") Long idUser) {
-        return accountRecordService.addAccountRecord(accountRecordDto, idUser, idAccount);
+    public AccountRecordDto save(@RequestBody AccountRecordAddDto accountRecordAddDto, @PathVariable("id_acc") Long idAccount, @PathVariable("id_user") Long idUser) {
+        return accountRecordService.addAccountRecord(accountRecordAddDto, idUser, idAccount);
     }
 
 
@@ -45,7 +47,7 @@ public class AccountRecordController {
 
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}")
-    public AccountRecordDto update(@RequestBody AccountRecordDto accountRecordDto, @PathVariable("id") Long id, @PathVariable("id_acc") Long idAccount, @PathVariable("id_user") Long idUser) {
-        return accountRecordService.updateAccountRecord(accountRecordDto, id, idAccount, idUser);
+    public AccountRecordDto update(@RequestBody AccountRecordEditDto accountRecordEditDto, @PathVariable("id") Long id, @PathVariable("id_acc") Long idAccount, @PathVariable("id_user") Long idUser) {
+        return accountRecordService.updateAccountRecord(accountRecordEditDto, id, idAccount, idUser);
     }
 }

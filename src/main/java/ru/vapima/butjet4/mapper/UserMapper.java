@@ -1,23 +1,20 @@
 package ru.vapima.butjet4.mapper;
 
-import com.github.template.dto.UserDto;
-import com.github.template.model.db.User;
 import org.mapstruct.*;
+import ru.vapima.butjet4.dto.user.UserDto;
+import ru.vapima.butjet4.dto.user.UserEditDto;
+import ru.vapima.butjet4.dto.user.UserRegistartionDto;
+import ru.vapima.butjet4.model.db.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     UserDto toDto(User user);
 
     User fromDto(UserDto userDto);
+    User fromDto(UserRegistartionDto userRegistartionDto);
+    User fromDto(UserEditDto userEditDto);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "state", ignore = true)
-    @Mapping(target = "role", ignore = true)
-    User fromDtoFormRegistaration(UserDto userDto);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "state", ignore = true)
-    @Mapping(target = "role", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-    void fromDtoFormEdit(UserDto userDto, @MappingTarget User user);
+    void patchFromEditDto(UserEditDto userEditDto, @MappingTarget User user);
+
 }

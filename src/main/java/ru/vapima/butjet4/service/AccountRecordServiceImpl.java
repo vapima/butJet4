@@ -3,7 +3,9 @@ package ru.vapima.butjet4.service;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.vapima.butjet4.dto.AccountRecordDto;
+import ru.vapima.butjet4.dto.accountRecord.AccountRecordAddDto;
+import ru.vapima.butjet4.dto.accountRecord.AccountRecordDto;
+import ru.vapima.butjet4.dto.accountRecord.AccountRecordEditDto;
 import ru.vapima.butjet4.mapper.AccountRecordMapper;
 import ru.vapima.butjet4.model.db.Account;
 import ru.vapima.butjet4.model.db.AccountRecord;
@@ -58,9 +60,9 @@ public class AccountRecordServiceImpl implements AccountRecordService {
     }
 
     @Override
-    public AccountRecordDto addAccountRecord(AccountRecordDto accountRecordDto, Long idUser, Long idAccount) {
+    public AccountRecordDto addAccountRecord(AccountRecordAddDto accountRecordAddDto, Long idUser, Long idAccount) {
         Account account = accountRepository.getOne(idAccount);
-        AccountRecord accountRecord = mapper.fromDtoFormCreat(accountRecordDto);
+        AccountRecord accountRecord = mapper.fromDto(accountRecordAddDto);
         accountRecord.setAccount(account);
         if (accountRecord.getDateTime() == null) {
             accountRecord.setDateTime(LocalDateTime.now());
@@ -69,7 +71,7 @@ public class AccountRecordServiceImpl implements AccountRecordService {
     }
 
     @Override
-    public AccountRecordDto updateAccountRecord(AccountRecordDto accountRecordDto, Long id, Long idUser, Long idAccount) {
+    public AccountRecordDto updateAccountRecord(AccountRecordEditDto accountRecordEditDto, Long id, Long idUser, Long idAccount) {
         Account account = accountRepository.getOne(idAccount);
         if (!account.getUser().getId().equals(idUser)) {
             throw new IllegalArgumentException("That's not your accountRecord.");
@@ -78,7 +80,7 @@ public class AccountRecordServiceImpl implements AccountRecordService {
         if (!accountRecord.getAccount().equals(account)) {
             throw new IllegalArgumentException("That's record not from this account.");
         }
-        mapper.formEditToAccountRecord(accountRecordDto, accountRecord);
+        mapper.patchFromEditDto(accountRecordEditDto, accountRecord);
         accountRecord.setId(id);
         return mapper.toDto(accountRecordRepository.save(accountRecord));
     }

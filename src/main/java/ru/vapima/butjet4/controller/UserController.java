@@ -6,7 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.vapima.butjet4.dto.UserDto;
+import ru.vapima.butjet4.dto.user.UserDto;
+import ru.vapima.butjet4.dto.user.UserEditDto;
+import ru.vapima.butjet4.dto.user.UserRegistartionDto;
 import ru.vapima.butjet4.service.UserService;
 
 import java.util.List;
@@ -21,8 +23,8 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto save(@RequestBody UserDto userDto) {
-        return userService.addUser(userDto);
+    public UserDto save(@RequestBody UserRegistartionDto userRegistartionDto) {
+        return userService.addUser(userRegistartionDto);
     }
 
     @GetMapping("/{id}")
@@ -42,7 +44,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}")
-    public UserDto update(@RequestBody UserDto userDto, @PathVariable("id") Long id) {
-        return userService.updateUser(userDto, id);
+    public UserDto update(@RequestBody UserEditDto userEditDto, @PathVariable("id") Long id) {
+        return userService.updateUser(userEditDto, id);
     }
 }

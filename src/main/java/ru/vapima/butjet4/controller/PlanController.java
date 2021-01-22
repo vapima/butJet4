@@ -5,7 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.vapima.butjet4.dto.PlanDto;
+import ru.vapima.butjet4.dto.plan.PlanAddDto;
+import ru.vapima.butjet4.dto.plan.PlanDto;
+import ru.vapima.butjet4.dto.plan.PlanEditDto;
 import ru.vapima.butjet4.service.PlanService;
 
 import java.util.List;
@@ -19,8 +21,8 @@ public class PlanController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PlanDto save(@RequestBody PlanDto planDTO, @PathVariable("id_user") Long idUser) {
-        return planService.addPlan(planDTO, idUser);
+    public PlanDto save(@RequestBody PlanAddDto planAddDto, @PathVariable("id_user") Long idUser) {
+        return planService.addPlan(planAddDto, idUser);
     }
 
 
@@ -43,7 +45,7 @@ public class PlanController {
 
 
     @PatchMapping("/{id}")
-    public PlanDto update(@RequestBody PlanDto planDTO, @PathVariable("id") Long id, @PathVariable("id_user") Long idUser) {
-        return planService.updatePlan(planDTO, id, idUser);
+    public PlanDto update(@RequestBody PlanEditDto planEditDto, @PathVariable("id") Long id, @PathVariable("id_user") Long idUser) {
+        return planService.updatePlan(planEditDto, id, idUser);
     }
 }

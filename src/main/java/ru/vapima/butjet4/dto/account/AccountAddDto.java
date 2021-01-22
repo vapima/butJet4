@@ -1,4 +1,4 @@
-package ru.vapima.butjet4.dto;
+package ru.vapima.butjet4.dto.account;
 
 import lombok.*;
 
@@ -8,9 +8,8 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-public class AccountDto {
-    private Long id;
+@EqualsAndHashCode
+public class AccountAddDto {
     private String name;
     private Boolean isActive;
 }

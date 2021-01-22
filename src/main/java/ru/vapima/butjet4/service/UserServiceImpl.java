@@ -3,7 +3,9 @@ package ru.vapima.butjet4.service;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.vapima.butjet4.dto.UserDto;
+import ru.vapima.butjet4.dto.user.UserDto;
+import ru.vapima.butjet4.dto.user.UserEditDto;
+import ru.vapima.butjet4.dto.user.UserRegistartionDto;
 import ru.vapima.butjet4.mapper.UserMapper;
 import ru.vapima.butjet4.model.db.Role;
 import ru.vapima.butjet4.model.db.State;
@@ -42,21 +44,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto addUser(UserDto userDto) {
-        User user = mapper.fromDtoFormRegistaration(userDto);
-        if (userRepository.existsUserByEmail(userDto.getEmail())) {
-            throw new IllegalArgumentException("Email already exist.");
-        }
+    public UserDto addUser(UserRegistartionDto userRegistartionDto) {
+        User user = mapper.fromDto(userRegistartionDto);
         user.setState(State.ACTIVE);
         user.setRole(Role.ROLE_USER);
-        return mapper.toDto(userRepository.save(user));
+     /*   User save=null;
+        try { save = userRepository.save(user);}
+        catch (DataIntegrityViolationException ex){throw new IllegalArgumentException(ex.getMessage());}*/
+        User save = userRepository.save(user);
+        return mapper.toDto(save);
 
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto, Long id) {
+    public UserDto updateUser(UserEditDto userEditDto, Long id) {
         User user = userRepository.getOne(id);
-        mapper.fromDtoFormEdit(userDto, user);
+        mapper.patchFromEditDto(userEditDto, user);
         user.setId(id);
         return mapper.toDto(userRepository.save(user));
     }

@@ -1,4 +1,4 @@
-package ru.vapima.butjet4.dto;
+package ru.vapima.butjet4.dto.plan;
 
 import lombok.*;
 

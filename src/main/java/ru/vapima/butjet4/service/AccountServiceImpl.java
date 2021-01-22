@@ -3,7 +3,9 @@ package ru.vapima.butjet4.service;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.vapima.butjet4.dto.AccountDto;
+import ru.vapima.butjet4.dto.account.AccountAddDto;
+import ru.vapima.butjet4.dto.account.AccountDto;
+import ru.vapima.butjet4.dto.account.AccountEditDto;
 import ru.vapima.butjet4.mapper.AccountMapper;
 import ru.vapima.butjet4.model.db.Account;
 import ru.vapima.butjet4.model.db.User;
@@ -55,21 +57,21 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto addAccount(AccountDto accountDto, Long idUser) {
-        Account account = mapper.fromDtoFormCreat(accountDto);
+    public AccountDto addAccount(AccountAddDto accountAddDto, Long idUser) {
+        Account account = mapper.fromDto(accountAddDto);
         User user = userRepository.getOne(idUser);
         account.setUser(user);
         return mapper.toDto(accountRepository.save(account));
     }
 
     @Override
-    public AccountDto updateAccount(AccountDto accountDto, Long id, Long idUser) {
+    public AccountDto updateAccount(AccountEditDto accountEditDto, Long id, Long idUser) {
         User user = userRepository.getOne(idUser);
         Account account = accountRepository.getOne(id);
         if (!account.getUser().equals(user)) {
             throw new IllegalArgumentException("That's not your account.");
         }
-        mapper.formEditToAccount(accountDto, account);
+        mapper.patchFromEditDto(accountEditDto, account);
         account.setUser(user);
         account.setId(id);
         return mapper.toDto(accountRepository.save(account));
