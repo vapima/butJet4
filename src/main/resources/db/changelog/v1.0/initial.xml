@@ -1,0 +1,84 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="vapima" id="3">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="user_pk"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column  name="hash_password"  type="VARCHAR2(255)"/>
+            <column  name="role"  type="VARCHAR(255)"/>
+            <column  name="state"  type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="vapima" id="4">
+        <createTable tableName="plans">
+            <column autoIncrement="true" name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="plan_pk"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="amount" type="BIGINT"/>
+            <column  name="expiration_date"  type="DATE"/>
+            <column name="user_id" type="int"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="vapima" id="5">
+        <createTable tableName="accounts">
+            <column autoIncrement="true" name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="account_pk"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="is_active" type="Boolean"/>
+            <column name="user_id" type="int"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="vapima" id="6">
+        <createTable tableName="account_records">
+            <column autoIncrement="true" name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="account_record_pk"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="amount" type="BIGINT"/>
+            <column name="date_time" type="TIMESTAMP"/>
+            <column name="account_id" type="int"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="7" author="vapima">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="plans"
+                                 constraintName="fk_plan_user"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="accounts"
+                                 constraintName="fk_account_user"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
+
+        <addForeignKeyConstraint baseColumnNames="account_id"
+                                 baseTableName="account_records"
+                                 constraintName="fk_account_record_account"
+                                 referencedColumnNames="id"
+                                 referencedTableName="accounts"/>
+
+    </changeSet>
+    <changeSet  author="vapima"  id="addUniqueConstraint-to-user-for-init">
+        <addUniqueConstraint
+                constraintName="addUniqueConstraint-to-user-for-init"
+                columnNames="email"
+                tableName="users"/>
+
+    </changeSet>
+    <changeSet id="pmikhalev" author="8">
+        <sqlFile path="data/init_base.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet id="vapima" author="9">
+        <sqlFile path="data/for_test_pagination_plans.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+</databaseChangeLog>
