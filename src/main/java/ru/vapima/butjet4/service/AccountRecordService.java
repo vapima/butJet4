@@ -1,7 +1,7 @@
-package com.github.template.service;
+package ru.vapima.butjet4.service;
 
-import com.github.template.dto.AccountRecordDto;
 import org.springframework.data.domain.Pageable;
+import ru.vapima.butjet4.dto.AccountRecordDto;
 
 import java.util.List;
 

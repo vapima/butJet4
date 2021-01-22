@@ -1,4 +1,4 @@
-package com.github.template.model.db;
+package ru.vapima.butjet4.model.db;
 
 public enum State {
     ACTIVE, DELETED, BANNED

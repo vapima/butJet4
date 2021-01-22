@@ -1,9 +1,9 @@
-package com.github.template.repository;
+package ru.vapima.butjet4.repository;
 
-import com.github.template.model.db.Plan;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ru.vapima.butjet4.model.db.Plan;
 
 import java.util.List;
 

@@ -1,14 +1,14 @@
-package com.github.template.service;
+package ru.vapima.butjet4.service;
 
-import com.github.template.dto.PlanDto;
-import com.github.template.mapper.PlanMapper;
-import com.github.template.model.db.Plan;
-import com.github.template.model.db.User;
-import com.github.template.repository.PlanRepository;
-import com.github.template.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.vapima.butjet4.dto.PlanDto;
+import ru.vapima.butjet4.mapper.PlanMapper;
+import ru.vapima.butjet4.model.db.Plan;
+import ru.vapima.butjet4.model.db.User;
+import ru.vapima.butjet4.repository.PlanRepository;
+import ru.vapima.butjet4.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +24,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public List<PlanDto> getAll(Long idUser, Pageable pageable) {
-        List<Plan> plans = planRepository.findAllByUserId(idUser,pageable);
+        List<Plan> plans = planRepository.findAllByUserId(idUser, pageable);
         return plans
                 .stream()
                 .filter(f -> f.getUser().getId().equals(idUser))
@@ -65,7 +65,7 @@ public class PlanServiceImpl implements PlanService {
         if (!plan.getUser().equals(user)) {
             throw new IllegalArgumentException("That's not your plan.");
         }
-        mapper.formEditToPlan(planDto,plan);
+        mapper.formEditToPlan(planDto, plan);
         plan.setUser(user);
         plan.setId(id);
         return mapper.toDto(planRepository.save(plan));

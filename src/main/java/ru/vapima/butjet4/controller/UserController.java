@@ -1,16 +1,16 @@
-package com.github.template.controller;
+package ru.vapima.butjet4.controller;
 
-import com.github.template.dto.UserDto;
-import com.github.template.model.db.State;
-import com.github.template.service.UserService;
+
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.vapima.butjet4.dto.UserDto;
+import ru.vapima.butjet4.service.UserService;
 
 import java.util.List;
+
 
 @RequestMapping("/users")
 @RestController
@@ -36,8 +36,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDto> list(@PageableDefault(value = 10,page = 0) Pageable pageable, @RequestParam(value = "state",required = false,defaultValue = "ACTIVE") String state) {
-        return userService.getAll(state,pageable);
+    public List<UserDto> list(@PageableDefault(value = 10, page = 0) Pageable pageable, @RequestParam(value = "state", required = false, defaultValue = "ACTIVE") String state) {
+        return userService.getAll(state, pageable);
     }
 
     @ResponseStatus(HttpStatus.OK)

@@ -1,14 +1,14 @@
-package com.github.template.service;
+package ru.vapima.butjet4.service;
 
-import com.github.template.dto.AccountRecordDto;
-import com.github.template.mapper.AccountRecordMapper;
-import com.github.template.model.db.Account;
-import com.github.template.model.db.AccountRecord;
-import com.github.template.repository.AccountRecordRepository;
-import com.github.template.repository.AccountRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.vapima.butjet4.dto.AccountRecordDto;
+import ru.vapima.butjet4.mapper.AccountRecordMapper;
+import ru.vapima.butjet4.model.db.Account;
+import ru.vapima.butjet4.model.db.AccountRecord;
+import ru.vapima.butjet4.repository.AccountRecordRepository;
+import ru.vapima.butjet4.repository.AccountRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,7 +29,7 @@ public class AccountRecordServiceImpl implements AccountRecordService {
         if (!account.getUser().getId().equals(idUser)) {
             throw new IllegalArgumentException("That's not your accountRecord.");
         }
-        List<AccountRecord> accountRecords = accountRecordRepository.findAllByAccountId(idAccount,pageable);
+        List<AccountRecord> accountRecords = accountRecordRepository.findAllByAccountId(idAccount, pageable);
         return accountRecords
                 .stream()
                 .filter(f -> f.getAccount().getUser().getId().equals(idUser))
@@ -62,7 +62,7 @@ public class AccountRecordServiceImpl implements AccountRecordService {
         Account account = accountRepository.getOne(idAccount);
         AccountRecord accountRecord = mapper.fromDtoFormCreat(accountRecordDto);
         accountRecord.setAccount(account);
-        if (accountRecord.getDateTime()==null) {
+        if (accountRecord.getDateTime() == null) {
             accountRecord.setDateTime(LocalDateTime.now());
         }
         return mapper.toDto(accountRecordRepository.save(accountRecord));
@@ -78,7 +78,7 @@ public class AccountRecordServiceImpl implements AccountRecordService {
         if (!accountRecord.getAccount().equals(account)) {
             throw new IllegalArgumentException("That's record not from this account.");
         }
-        mapper.formEditToAccountRecord(accountRecordDto,accountRecord);
+        mapper.formEditToAccountRecord(accountRecordDto, accountRecord);
         accountRecord.setId(id);
         return mapper.toDto(accountRecordRepository.save(accountRecord));
     }

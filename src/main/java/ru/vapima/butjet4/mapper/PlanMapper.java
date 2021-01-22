@@ -1,10 +1,8 @@
-package com.github.template.mapper;
+package ru.vapima.butjet4.mapper;
 
-import com.github.template.dto.PlanDto;
-import com.github.template.dto.UserDto;
-import com.github.template.model.db.Plan;
-import com.github.template.model.db.User;
 import org.mapstruct.*;
+import ru.vapima.butjet4.dto.PlanDto;
+import ru.vapima.butjet4.model.db.Plan;
 
 @Mapper(componentModel = "spring")
 public interface PlanMapper {
@@ -12,10 +10,10 @@ public interface PlanMapper {
 
     Plan fromDto(PlanDto planDto);
 
-    @Mapping(target = "id",ignore = true)
+    @Mapping(target = "id", ignore = true)
     Plan fromDtoFormCreat(PlanDto planDto);
 
-    @Mapping(target = "id",ignore = true)
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+    @Mapping(target = "id", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     void formEditToPlan(PlanDto planDto, @MappingTarget Plan plan);
 }

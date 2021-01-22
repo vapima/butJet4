@@ -1,13 +1,8 @@
-package com.github.template.dto;
+package ru.vapima.butjet4.dto;
 
-import com.github.template.model.db.Role;
-import com.github.template.model.db.State;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import ru.vapima.butjet4.model.db.Role;
+import ru.vapima.butjet4.model.db.State;
 
 
 @NoArgsConstructor

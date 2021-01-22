@@ -1,4 +1,4 @@
-package com.github.template.mapper;
+package ru.vapima.butjet4.mapper;
 
 import com.github.template.dto.UserDto;
 import com.github.template.model.db.User;
@@ -10,14 +10,14 @@ public interface UserMapper {
 
     User fromDto(UserDto userDto);
 
-    @Mapping(target = "id",ignore = true)
-    @Mapping(target = "state",ignore = true)
-    @Mapping(target = "role",ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "state", ignore = true)
+    @Mapping(target = "role", ignore = true)
     User fromDtoFormRegistaration(UserDto userDto);
 
-    @Mapping(target = "id",ignore = true)
-    @Mapping(target = "state",ignore = true)
-    @Mapping(target = "role",ignore = true)
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "state", ignore = true)
+    @Mapping(target = "role", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     void fromDtoFormEdit(UserDto userDto, @MappingTarget User user);
 }

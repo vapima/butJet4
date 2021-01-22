@@ -1,12 +1,12 @@
-package com.github.template.controller;
+package ru.vapima.butjet4.controller;
 
-import com.github.template.dto.PlanDto;
-import com.github.template.service.PlanService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.vapima.butjet4.dto.PlanDto;
+import ru.vapima.butjet4.service.PlanService;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class PlanController {
 
 
     @GetMapping
-    public List<PlanDto> list(@PageableDefault(value = 10,page = 0) Pageable pageable, @PathVariable("id_user") Long idUser) {
+    public List<PlanDto> list(@PageableDefault(value = 10, page = 0) Pageable pageable, @PathVariable("id_user") Long idUser) {
         return planService.getAll(idUser, pageable);
     }
 

@@ -1,15 +1,15 @@
-package com.github.template.service;
+package ru.vapima.butjet4.service;
 
-import com.github.template.dto.AccountDto;
-import com.github.template.mapper.AccountMapper;
-import com.github.template.model.db.Account;
-import com.github.template.model.db.User;
-import com.github.template.repository.AccountRecordRepository;
-import com.github.template.repository.AccountRepository;
-import com.github.template.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.vapima.butjet4.dto.AccountDto;
+import ru.vapima.butjet4.mapper.AccountMapper;
+import ru.vapima.butjet4.model.db.Account;
+import ru.vapima.butjet4.model.db.User;
+import ru.vapima.butjet4.repository.AccountRecordRepository;
+import ru.vapima.butjet4.repository.AccountRepository;
+import ru.vapima.butjet4.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +26,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<AccountDto> getAll(Long idUser, Pageable pageable) {
-        List<Account> Accounts = accountRepository.findAllByUserId(idUser,pageable);
+        List<Account> Accounts = accountRepository.findAllByUserId(idUser, pageable);
         return Accounts
                 .stream()
                 .filter(f -> f.getUser().getId().equals(idUser))
@@ -69,7 +69,7 @@ public class AccountServiceImpl implements AccountService {
         if (!account.getUser().equals(user)) {
             throw new IllegalArgumentException("That's not your account.");
         }
-        mapper.formEditToAccount(accountDto,account);
+        mapper.formEditToAccount(accountDto, account);
         account.setUser(user);
         account.setId(id);
         return mapper.toDto(accountRepository.save(account));

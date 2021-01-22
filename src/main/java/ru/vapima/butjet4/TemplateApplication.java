@@ -1,4 +1,4 @@
-package com.github.template;
+package ru.vapima.butjet4;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
