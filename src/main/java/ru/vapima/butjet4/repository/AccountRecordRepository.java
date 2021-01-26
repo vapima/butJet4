@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface AccountRecordRepository extends JpaRepository<AccountRecord, Long> {
     List<AccountRecord> findAllByAccountId(Long id, Pageable pageable);
+    List<AccountRecord> findAllByAccountId(Long id);
 
     @Transactional
     void deleteAccountRecordByAccountId(Long id);

@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findAllByUserId(Long id, Pageable pageable);
+    List<Account> findAllByUserId(Long id);
 }
