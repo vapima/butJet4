@@ -1,6 +1,7 @@
 package ru.vapima.butjet4.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.vapima.butjet4.dto.user.UserDto;
@@ -13,6 +14,7 @@ import ru.vapima.butjet4.model.db.User;
 import ru.vapima.butjet4.repository.UserRepository;
 import ru.vapima.butjet4.service.UserService;
 
+import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,12 +31,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable)
                 .stream()
                 .filter(o -> o.getState() != null && o.getState().equals(State.valueOf(state.toUpperCase())))
-                .map(mapper::toDto).collect(Collectors.toList());
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public UserDto getById(Long id) {
-        return mapper.toDto(userRepository.getOne(id));
+        User user = userRepository.getOne(id);
+        return mapper.toDto(user);
     }
 
     @Override
@@ -49,12 +53,13 @@ public class UserServiceImpl implements UserService {
         User user = mapper.fromDto(userRegistartionDto);
         user.setState(State.ACTIVE);
         user.setRole(Role.ROLE_USER);
-     /*   User save=null;
-        try { save = userRepository.save(user);}
-        catch (DataIntegrityViolationException ex){throw new IllegalArgumentException(ex.getMessage());}*/
-        User save = userRepository.save(user);
+        User save = null;
+        try {
+            save = userRepository.save(user);
+        } catch (DataIntegrityViolationException ex) {
+            throw new IllegalArgumentException("This email already exist.");
+        }
         return mapper.toDto(save);
-
     }
 
     @Override
@@ -62,6 +67,12 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getOne(id);
         mapper.patchFromEditDto(userEditDto, user);
         user.setId(id);
-        return mapper.toDto(userRepository.save(user));
+        User save = null;
+        try {
+            save = userRepository.save(user);
+        } catch (DataIntegrityViolationException ex) {
+            throw new IllegalArgumentException("This email already exist.");
+        }
+        return mapper.toDto(save);
     }
 }

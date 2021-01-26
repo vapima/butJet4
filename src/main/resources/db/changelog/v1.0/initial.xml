@@ -78,7 +78,4 @@
     <changeSet id="pmikhalev" author="8">
         <sqlFile path="data/init_base.sql" relativeToChangelogFile="true"/>
     </changeSet>
-    <changeSet id="vapima" author="9">
-        <sqlFile path="data/for_test_pagination_plans.sql" relativeToChangelogFile="true"/>
-    </changeSet>
 </databaseChangeLog>

@@ -51,8 +51,6 @@ public class AccountServiceImpl implements AccountService {
         if (!Account.getUser().getId().equals(idUser)) {
             throw new IllegalArgumentException("That's not your Account.");
         }
-
-        //TODO Как реализовать? Сейчас сам сделал, но может лучше каскад? Что бы не инжектить акк рек репо ради этого?
         accountRecordRepository.deleteAccountRecordByAccountId(id);
         accountRepository.deleteById(id);
     }
