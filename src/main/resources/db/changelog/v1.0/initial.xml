@@ -75,7 +75,5 @@
                 tableName="users"/>
 
     </changeSet>
-    <changeSet id="pmikhalev" author="8">
-        <sqlFile path="data/init_base.sql" relativeToChangelogFile="true"/>
-    </changeSet>
+
 </databaseChangeLog>

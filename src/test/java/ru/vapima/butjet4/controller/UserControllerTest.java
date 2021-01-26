@@ -2,7 +2,10 @@ package ru.vapima.butjet4.controller;
 
 import lombok.SneakyThrows;
 import org.json.JSONObject;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,17 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.vapima.butjet4.BaseTest;
-import ru.vapima.butjet4.dto.user.UserEditDto;
-import ru.vapima.butjet4.dto.user.UserRegistartionDto;
-
 import ru.vapima.butjet4.model.db.Role;
 import ru.vapima.butjet4.model.db.State;
 import ru.vapima.butjet4.model.db.User;
 import ru.vapima.butjet4.repository.UserRepository;
-import ru.vapima.butjet4.service.UserService;
-
-
-import java.util.Random;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -29,9 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @AutoConfigureMockMvc
-@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-//@Sql(scripts = {"/big_plans_user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class UserControllerTest extends BaseTest {
     @Autowired
     private MockMvc mockMvc;
@@ -40,22 +34,23 @@ class UserControllerTest extends BaseTest {
     private Long id;
 
 
-
     @BeforeAll
     void prepareData() {
-         id=userRepository.save(User.builder()
-                    .email("test@test.tt")
-                    .name("test")
-                    .hashPassword("test_password")
-                    .state(State.ACTIVE)
-                    .role(Role.ROLE_USER)
-                    .build())
+        id = userRepository.save(User.builder()
+                .email("test@test.tt")
+                .name("test")
+                .hashPassword("test_password")
+                .state(State.ACTIVE)
+                .role(Role.ROLE_USER)
+                .build())
                 .getId();
     }
+
     @AfterAll
-    void finish(){
+    void finish() {
         userRepository.deleteById(id);
     }
+
     @SneakyThrows
     @Test
     void saveNewUser() {
@@ -78,7 +73,7 @@ class UserControllerTest extends BaseTest {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json("{\"id\":"+id+",\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}"));
+                .andExpect(content().json("{\"id\":" + id + ",\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}"));
     }
 
     @SneakyThrows
@@ -107,7 +102,7 @@ class UserControllerTest extends BaseTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(content().json("[{\"id\":"+id+",\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}]"));
+                .andExpect(content().json("[{\"id\":" + id + ",\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}]"));
     }
 
     @SneakyThrows
@@ -118,25 +113,25 @@ class UserControllerTest extends BaseTest {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json("{\"id\":"+id+",\"name\":\"test_update\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}"));
-        mockMvc.perform(patch("/users/{accountId}", "1")
+                .andExpect(content().json("{\"id\":" + id + ",\"name\":\"test_update\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}"));
+        mockMvc.perform(patch("/users/{accountId}", id)
                 .content("{\"name\":\"test\"}")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json("{\"id\":"+id+",\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}"));
+                .andExpect(content().json("{\"id\":" + id + ",\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}"));
     }
 
     @SneakyThrows
     @Test
     void saveNewUserWithExistEmailShouldBeError() {
-         mockMvc.perform(post("/users")
+        mockMvc.perform(post("/users")
                 .content("{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("This email already exist."))
                 .andReturn();
-       }
+    }
 
 }
