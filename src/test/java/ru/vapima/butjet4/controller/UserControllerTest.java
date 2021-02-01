@@ -33,7 +33,8 @@ class UserControllerTest extends BaseTest {
     private UserRepository userRepository;
     private Long id;
 
-
+    public static final String NEW_USER_JSON="{\"id\":1,\"name\":\"test\",\"email\":\"test@test2.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}";
+    public static final String NEW_USER_WITH_EXIST_EMAIL_JSON="{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}";
     @BeforeAll
     void prepareData() {
         id = userRepository.save(User.builder()
@@ -55,7 +56,7 @@ class UserControllerTest extends BaseTest {
     @Test
     void saveNewUser() {
         MvcResult mvcResult = mockMvc.perform(post("/users")
-                .content("{\"id\":1,\"name\":\"test\",\"email\":\"test@test2.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}")
+                .content(NEW_USER_JSON)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -126,7 +127,7 @@ class UserControllerTest extends BaseTest {
     @Test
     void saveNewUserWithExistEmailShouldBeError() {
         mockMvc.perform(post("/users")
-                .content("{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}")
+                .content(NEW_USER_WITH_EXIST_EMAIL_JSON)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
