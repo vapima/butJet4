@@ -28,59 +28,42 @@ public class AccountRecordServiceImpl implements AccountRecordService {
 
     @Override
     public List<AccountRecordDto> getAll(Long idUser, Long idAccount, Pageable pageable) {
-        Account account = accountRepository.getOne(idAccount);
-        if (!account.getUser().getId().equals(idUser)) {
-            throw new IllegalArgumentException("That's not your accountRecord.");
-        }
-        List<AccountRecord> accountRecords = accountRecordRepository.findAllByAccountId(idAccount, pageable);
+        Account account = accountRepository.findByIdAndUserId(idAccount,idUser);
+        List<AccountRecord> accountRecords = accountRecordRepository.findAllByAccountId(account.getId(), pageable);
         return accountRecords
                 .stream()
-                .filter(f -> f.getAccount().getUser().getId().equals(idUser))
-                .filter(f -> f.getAccount().getId().equals(idAccount))
                 .map(mapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public AccountRecordDto getById(Long id, Long idUser, Long idAccount) {
-        AccountRecord accountRecord = accountRecordRepository.getOne(id);
-        Account account = accountRepository.getOne(idAccount);
-        if (!account.getUser().getId().equals(idUser) || !accountRecord.getAccount().equals(account)) {
-            throw new IllegalArgumentException("That's not your accountRecord.");
-        }
+        Account account = accountRepository.findByIdAndUserId(idAccount,idUser);
+        AccountRecord accountRecord = accountRecordRepository.findByIdAndAccountId(id,account.getId());
         return mapper.toDto(accountRecord);
     }
 
     @Override
     public void deleteById(Long id, Long idUser, Long idAccount) {
-        AccountRecord accountRecord = accountRecordRepository.getOne(id);
-        Account account = accountRepository.getOne(idAccount);
-        if (!account.getUser().getId().equals(idUser) || !accountRecord.getAccount().equals(account)) {
-            throw new IllegalArgumentException("That's not your accountRecord.");
-        }
-        accountRecordRepository.deleteById(id);
+        Account account = accountRepository.findByIdAndUserId(idAccount,idUser);
+        AccountRecord accountRecord = accountRecordRepository.findByIdAndAccountId(id,account.getId());
+        accountRecordRepository.delete(accountRecord);
     }
 
     @Override
     public AccountRecordDto addAccountRecord(AccountRecordAddDto accountRecordAddDto, Long idUser, Long idAccount) {
-        Account account = accountRepository.getOne(idAccount);
-        AccountRecord accountRecord = mapper.fromDto(accountRecordAddDto);
-        accountRecord.setAccount(account);
-        if (accountRecord.getDateTime() == null) {
-            accountRecord.setDateTime(LocalDateTime.now());
+        Account account = accountRepository.findByIdAndUserId(idAccount,idUser);
+        AccountRecord accountRecordInput = mapper.fromDto(accountRecordAddDto);
+        accountRecordInput.setAccount(account);
+        if (accountRecordInput.getDateTime() == null) {
+            accountRecordInput.setDateTime(LocalDateTime.now());
         }
-        return mapper.toDto(accountRecordRepository.save(accountRecord));
+        return mapper.toDto(accountRecordRepository.save(accountRecordInput));
     }
 
     @Override
     public AccountRecordDto updateAccountRecord(AccountRecordEditDto accountRecordEditDto, Long id, Long idUser, Long idAccount) {
-        Account account = accountRepository.getOne(idAccount);
-        if (!account.getUser().getId().equals(idUser)) {
-            throw new IllegalArgumentException("That's not your accountRecord.");
-        }
-        AccountRecord accountRecord = accountRecordRepository.getOne(id);
-        if (!accountRecord.getAccount().equals(account)) {
-            throw new IllegalArgumentException("That's record not from this account.");
-        }
+        Account account = accountRepository.findByIdAndUserId(idAccount,idUser);
+        AccountRecord accountRecord = accountRecordRepository.findByIdAndAccountId(id,account.getId());
         mapper.patchFromEditDto(accountRecordEditDto, accountRecord);
         accountRecord.setId(id);
         return mapper.toDto(accountRecordRepository.save(accountRecord));

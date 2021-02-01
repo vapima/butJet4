@@ -20,24 +20,6 @@ import java.util.List;
 public class DailyRateServiceImpl implements DailyRateService {
     private final AccountRepository accountRepository;
     private final PlanRepository planRepository;
-    private final AccountRecordRepository accountRecordRepository;
-
-    private Long totalAcc(List<Account> accs) {
-        Long total = 0L;
-        for (Account a : accs) {
-                total += accountRecordRepository.getAmountFromLastRecordByAccountId(a.getId());
-        }
-        return total;
-    }
-    private Long totalAccActive(List<Account> accs) {
-        Long total = 0L;
-        for (Account a : accs) {
-            if (a.getIsActive()) {
-                total += accountRecordRepository.getAmountFromLastRecordByAccountId(a.getId());
-            }
-        }
-        return total;
-    }
 
     private Long totalPlan(List<Plan> plans) {
         Long totalPlans = 0L;
@@ -69,8 +51,8 @@ public class DailyRateServiceImpl implements DailyRateService {
 
     @Override
     public DailyRateDto getDailyRateByUserId(Long id) {
-        Long allAmountAccount=accountRepository.getSumAmountAllAccountsByUserId(id);
-        Long activeAmountAccount=accountRepository.getSumAmountActiveAccountsByUserId(id);
+        Long allAmountAccount=accountRepository.getSumAmountAccountsByUserIdAAndIsActive(id,false);
+        Long activeAmountAccount=accountRepository.getSumAmountAccountsByUserIdAAndIsActive(id,true);
         List<Plan> planList = planRepository.findAllByUserId(id);
         return DailyRateDto.builder()
                 .rate(getRate(planList,activeAmountAccount))

@@ -30,44 +30,34 @@ public class PlanServiceImpl implements PlanService {
         List<Plan> plans = planRepository.findAllByUserId(idUser, pageable);
         return plans
                 .stream()
-                .filter(f -> f.getUser().getId().equals(idUser))
                 .map(mapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public PlanDto getById(Long id, Long idUser) {
-        Plan plan = planRepository.getOne(id);
-        if (!plan.getUser().getId().equals(idUser)) {
-            throw new IllegalArgumentException("That's not your plan.");
-        }
+        Plan plan = planRepository.findByIdAndUserId(id,idUser);
         return mapper.toDto(plan);
     }
 
     @Override
     public void deleteById(Long id, Long idUser) {
-        Plan plan = planRepository.getOne(id);
-        if (!plan.getUser().getId().equals(idUser)) {
-            throw new IllegalArgumentException("That's not your plan.");
-        }
-        planRepository.deleteById(id);
+        Plan plan = planRepository.findByIdAndUserId(id,idUser);
+        planRepository.delete(plan);
     }
 
     @Override
     public PlanDto addPlan(PlanAddDto planAddDto, Long idUser) {
-        Plan plan = mapper.fromDto(planAddDto);
+        Plan planInput = mapper.fromDto(planAddDto);
         User user = userRepository.getOne(idUser);
-        plan.setUser(user);
-        Plan save = planRepository.save(plan);
+        planInput.setUser(user);
+        Plan save = planRepository.save(planInput);
         return mapper.toDto(save);
     }
 
     @Override
     public PlanDto updatePlan(PlanEditDto planEditDto, Long id, Long idUser) {
         User user = userRepository.getOne(idUser);
-        Plan plan = planRepository.getOne(id);
-        if (!plan.getUser().equals(user)) {
-            throw new IllegalArgumentException("That's not your plan.");
-        }
+        Plan plan = planRepository.findByIdAndUserId(id,idUser);
         mapper.patchFromEditDto(planEditDto, plan);
         plan.setUser(user);
         plan.setId(id);

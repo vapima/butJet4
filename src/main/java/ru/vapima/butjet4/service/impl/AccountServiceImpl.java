@@ -32,44 +32,36 @@ public class AccountServiceImpl implements AccountService {
         List<Account> Accounts = accountRepository.findAllByUserId(idUser, pageable);
         return Accounts
                 .stream()
-                .filter(f -> f.getUser().getId().equals(idUser))
                 .map(mapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public AccountDto getById(Long id, Long idUser) {
-        Account Account = accountRepository.getOne(id);
-        if (!Account.getUser().getId().equals(idUser)) {
-            throw new IllegalArgumentException("That's not your Account.");
-        }
+        Account Account = accountRepository.findByIdAndUserId(id,idUser);
         return mapper.toDto(Account);
     }
 
     @Override
     public void deleteById(Long id, Long idUser) {
-        Account Account = accountRepository.getOne(id);
-        if (!Account.getUser().getId().equals(idUser)) {
-            throw new IllegalArgumentException("That's not your Account.");
+        Account account = accountRepository.findByIdAndUserId(id,idUser);
+        if (account!=null) {
+            accountRecordRepository.deleteAccountRecordByAccountId(id);
+            accountRepository.delete(account);
         }
-        accountRecordRepository.deleteAccountRecordByAccountId(id);
-        accountRepository.deleteById(id);
     }
 
     @Override
     public AccountDto addAccount(AccountAddDto accountAddDto, Long idUser) {
-        Account account = mapper.fromDto(accountAddDto);
+        Account accountInput = mapper.fromDto(accountAddDto);
         User user = userRepository.getOne(idUser);
-        account.setUser(user);
-        return mapper.toDto(accountRepository.save(account));
+        accountInput.setUser(user);
+        return mapper.toDto(accountRepository.save(accountInput));
     }
 
     @Override
     public AccountDto updateAccount(AccountEditDto accountEditDto, Long id, Long idUser) {
         User user = userRepository.getOne(idUser);
-        Account account = accountRepository.getOne(id);
-        if (!account.getUser().equals(user)) {
-            throw new IllegalArgumentException("That's not your account.");
-        }
+        Account account = accountRepository.findByIdAndUserId(id,idUser);
         mapper.patchFromEditDto(accountEditDto, account);
         account.setUser(user);
         account.setId(id);

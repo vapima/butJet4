@@ -11,4 +11,5 @@ import java.util.List;
 public interface PlanRepository extends JpaRepository<Plan, Long> {
     List<Plan> findAllByUserId(Long id, Pageable pageable);
     List<Plan> findAllByUserId(Long id);
+    Plan findByIdAndUserId(Long id, Long user_id);
 }
