@@ -1,26 +1,63 @@
 package ru.vapima.butjet4.config;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import ru.vapima.butjet4.config.filters.JwtFilter;
+import ru.vapima.butjet4.service.UserService;
 
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+//@AllArgsConstructor
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private JwtFilter jwtFilter;
+    @Autowired
+    private UserService userService;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
+        http.cors().and().authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/authenticate").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(jwtFilter, CorsFilter.class);
+    }
+
+    @Autowired
+    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder());
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -28,6 +65,11 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(corsConfigurationSource()));
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean

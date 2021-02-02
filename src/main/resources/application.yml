@@ -5,9 +5,9 @@ spring:
       connection-timeout: 30000
       maximum-pool-size: 10
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DATABASE_HOST:192.168.0.106}/${DATABASE_NAME:test_database}?currentSchema=public
-    username: ${DATABASE_USER:test_user}
-    password: ${DATABASE_PASSWORD:qwerty}
+    url: jdbc:postgresql://${DATABASE_HOST:localhost:5430}/${DATABASE_NAME:test}?currentSchema=public
+    username: ${DATABASE_USER:test}
+    password: ${DATABASE_PASSWORD:test}
   jpa:
     hibernate:
       ddl-auto: none

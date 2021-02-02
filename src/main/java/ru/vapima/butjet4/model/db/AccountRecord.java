@@ -14,12 +14,17 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode(of = "id")
 public class AccountRecord {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long amount;
+
     private String description;
+
     private LocalDateTime dateTime;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
