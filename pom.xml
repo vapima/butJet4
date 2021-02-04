@@ -16,8 +16,8 @@
 
     <properties>
         <org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
-        <lombok.version>1.18.18</lombok.version>
-        <java.version>15</java.version>
+        <lombok.version>1.18.12</lombok.version>
+        <java.version>11</java.version>
     </properties>
 
     <dependencies>
@@ -116,8 +116,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>15</source>
-                    <target>15</target>
+                    <source>11</source>
+                    <target>11</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
