@@ -1,12 +1,9 @@
 package ru.vapima.butjet4.service.impl;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.vapima.butjet4.dto.dailyRate.DailyRateDto;
-import ru.vapima.butjet4.model.db.Account;
 import ru.vapima.butjet4.model.db.Plan;
-import ru.vapima.butjet4.repository.AccountRecordRepository;
 import ru.vapima.butjet4.repository.AccountRepository;
 import ru.vapima.butjet4.repository.PlanRepository;
 import ru.vapima.butjet4.service.DailyRateService;
@@ -30,7 +27,6 @@ public class DailyRateServiceImpl implements DailyRateService {
     }
 
 
-
     public Long daysLeftMonth() {
         return (long) Period.between(LocalDate.now(), LocalDate.now().plusMonths(1).withDayOfMonth(1)).getDays();
     }
@@ -51,15 +47,21 @@ public class DailyRateServiceImpl implements DailyRateService {
 
     @Override
     public DailyRateDto getDailyRateByUserId(Long id) {
-        Long allAmountAccount=accountRepository.getSumAmountAccountsByUserIdAAndIsActive(id,false);
-        Long activeAmountAccount=accountRepository.getSumAmountAccountsByUserIdAAndIsActive(id,true);
+        Long allAmountAccount = accountRepository.getSumAmountAccountsByUserIdAAndIsActive(id, false);
+        Long activeAmountAccount = accountRepository.getSumAmountAccountsByUserIdAAndIsActive(id, true);
+        if (allAmountAccount == null) {
+            allAmountAccount = 0L;
+        }
+        if (activeAmountAccount == null) {
+            activeAmountAccount = 0L;
+        }
         List<Plan> planList = planRepository.findAllByUserId(id);
         return DailyRateDto.builder()
-                .rate(getRate(planList,activeAmountAccount))
-                  .allAccounts(allAmountAccount)
-                  .allPlans(totalPlan(planList))
-                  .allActiveAccounts(activeAmountAccount)
-                  .allPlansInThisMounth(getAllPlansInThisMounth(planList))
+                .rate(getRate(planList, activeAmountAccount))
+                .allAccounts(allAmountAccount)
+                .allPlans(totalPlan(planList))
+                .allActiveAccounts(activeAmountAccount)
+                .allPlansInThisMounth(getAllPlansInThisMounth(planList))
                 .build();
     }
 }

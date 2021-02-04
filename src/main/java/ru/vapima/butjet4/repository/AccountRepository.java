@@ -14,11 +14,14 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     List<Account> findAllByUserId(Long id);
 
-    @Query(value = "SELECT SUM(t1.amount) FROM account_records t1, " +
-            "(SELECT account_id, MAX(date_time) date_time FROM account_records GROUP BY account_id) t2 " +
-            "WHERE t1.account_id=t2.account_id AND t1.date_time=t2.date_time " +
-            "AND t2.account_id IN (SELECT id FROM accounts WHERE is_active=:isActive AND user_id=:id)",
-            nativeQuery = true)
+    @Query(value = """
+    SELECT SUM(t1.amount)\s
+    FROM account_records t1 INNER JOIN
+         (SELECT account_id, MAX(date_time) date_time FROM account_records GROUP BY account_id) t2\s
+               ON t1.account_id=t2.account_id\s
+               AND t1.date_time=t2.date_time\s
+               WHERE t2.account_id IN (SELECT id FROM accounts WHERE is_active=true AND user_id=3)
+    """, nativeQuery = true)
     Long getSumAmountAccountsByUserIdAAndIsActive(Long id, Boolean isActive);
 
 

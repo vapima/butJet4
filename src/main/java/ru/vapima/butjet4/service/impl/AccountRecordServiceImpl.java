@@ -28,7 +28,7 @@ public class AccountRecordServiceImpl implements AccountRecordService {
 
     @Override
     public List<AccountRecordDto> getAll(Long idUser, Long idAccount, Pageable pageable) {
-        Account account = accountRepository.findByIdAndUserId(idAccount,idUser);
+        Account account = accountRepository.findByIdAndUserId(idAccount, idUser);
         List<AccountRecord> accountRecords = accountRecordRepository.findAllByAccountId(account.getId(), pageable);
         return accountRecords
                 .stream()
@@ -37,21 +37,21 @@ public class AccountRecordServiceImpl implements AccountRecordService {
 
     @Override
     public AccountRecordDto getById(Long id, Long idUser, Long idAccount) {
-        Account account = accountRepository.findByIdAndUserId(idAccount,idUser);
-        AccountRecord accountRecord = accountRecordRepository.findByIdAndAccountId(id,account.getId());
+        Account account = accountRepository.findByIdAndUserId(idAccount, idUser);
+        AccountRecord accountRecord = accountRecordRepository.findByIdAndAccountId(id, account.getId());
         return mapper.toDto(accountRecord);
     }
 
     @Override
     public void deleteById(Long id, Long idUser, Long idAccount) {
-        Account account = accountRepository.findByIdAndUserId(idAccount,idUser);
-        AccountRecord accountRecord = accountRecordRepository.findByIdAndAccountId(id,account.getId());
+        Account account = accountRepository.findByIdAndUserId(idAccount, idUser);
+        AccountRecord accountRecord = accountRecordRepository.findByIdAndAccountId(id, account.getId());
         accountRecordRepository.delete(accountRecord);
     }
 
     @Override
     public AccountRecordDto addAccountRecord(AccountRecordAddDto accountRecordAddDto, Long idUser, Long idAccount) {
-        Account account = accountRepository.findByIdAndUserId(idAccount,idUser);
+        Account account = accountRepository.findByIdAndUserId(idAccount, idUser);
         AccountRecord accountRecordInput = mapper.fromDto(accountRecordAddDto);
         accountRecordInput.setAccount(account);
         if (accountRecordInput.getDateTime() == null) {
@@ -62,8 +62,8 @@ public class AccountRecordServiceImpl implements AccountRecordService {
 
     @Override
     public AccountRecordDto updateAccountRecord(AccountRecordEditDto accountRecordEditDto, Long id, Long idUser, Long idAccount) {
-        Account account = accountRepository.findByIdAndUserId(idAccount,idUser);
-        AccountRecord accountRecord = accountRecordRepository.findByIdAndAccountId(id,account.getId());
+        Account account = accountRepository.findByIdAndUserId(idAccount, idUser);
+        AccountRecord accountRecord = accountRecordRepository.findByIdAndAccountId(id, account.getId());
         mapper.patchFromEditDto(accountRecordEditDto, accountRecord);
         accountRecord.setId(id);
         return mapper.toDto(accountRecordRepository.save(accountRecord));

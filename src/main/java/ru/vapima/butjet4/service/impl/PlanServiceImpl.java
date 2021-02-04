@@ -35,13 +35,13 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public PlanDto getById(Long id, Long idUser) {
-        Plan plan = planRepository.findByIdAndUserId(id,idUser);
+        Plan plan = planRepository.findByIdAndUserId(id, idUser);
         return mapper.toDto(plan);
     }
 
     @Override
     public void deleteById(Long id, Long idUser) {
-        Plan plan = planRepository.findByIdAndUserId(id,idUser);
+        Plan plan = planRepository.findByIdAndUserId(id, idUser);
         planRepository.delete(plan);
     }
 
@@ -57,7 +57,7 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public PlanDto updatePlan(PlanEditDto planEditDto, Long id, Long idUser) {
         User user = userRepository.getOne(idUser);
-        Plan plan = planRepository.findByIdAndUserId(id,idUser);
+        Plan plan = planRepository.findByIdAndUserId(id, idUser);
         mapper.patchFromEditDto(planEditDto, plan);
         plan.setUser(user);
         plan.setId(id);

@@ -17,7 +17,6 @@ import ru.vapima.butjet4.model.db.User;
 import ru.vapima.butjet4.repository.UserRepository;
 import ru.vapima.butjet4.service.UserService;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +43,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getById(Long id) {
         User user = userRepository.getOne(id);
+        return mapper.toDto(user);
+    }
+
+    @Override
+    public UserDto getByEmail(String email) {
+        User user = userRepository.findByEmail(email);
         return mapper.toDto(user);
     }
 

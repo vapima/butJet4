@@ -37,14 +37,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto getById(Long id, Long idUser) {
-        Account Account = accountRepository.findByIdAndUserId(id,idUser);
+        Account Account = accountRepository.findByIdAndUserId(id, idUser);
         return mapper.toDto(Account);
     }
 
     @Override
     public void deleteById(Long id, Long idUser) {
-        Account account = accountRepository.findByIdAndUserId(id,idUser);
-        if (account!=null) {
+        Account account = accountRepository.findByIdAndUserId(id, idUser);
+        if (account != null) {
             accountRecordRepository.deleteAccountRecordByAccountId(id);
             accountRepository.delete(account);
         }
@@ -61,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDto updateAccount(AccountEditDto accountEditDto, Long id, Long idUser) {
         User user = userRepository.getOne(idUser);
-        Account account = accountRepository.findByIdAndUserId(id,idUser);
+        Account account = accountRepository.findByIdAndUserId(id, idUser);
         mapper.patchFromEditDto(accountEditDto, account);
         account.setUser(user);
         account.setId(id);

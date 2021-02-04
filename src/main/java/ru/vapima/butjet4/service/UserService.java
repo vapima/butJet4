@@ -13,6 +13,8 @@ public interface UserService extends UserDetailsService {
 
     UserDto getById(Long id);
 
+    UserDto getByEmail(String email);
+
     void deleteById(Long id);
 
     UserDto addUser(UserRegistartionDto userRegistartionDto);
