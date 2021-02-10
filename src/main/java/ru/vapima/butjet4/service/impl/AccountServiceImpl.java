@@ -3,6 +3,7 @@ package ru.vapima.butjet4.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.vapima.butjet4.dto.account.AccountAddDto;
 import ru.vapima.butjet4.dto.account.AccountDto;
 import ru.vapima.butjet4.dto.account.AccountEditDto;
@@ -42,6 +43,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id, Long idUser) {
         Account account = accountRepository.findByIdAndUserId(id, idUser);
         if (account != null) {

@@ -7,5 +7,6 @@ import ru.vapima.butjet4.model.db.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsUserByEmail(String email);
+
     User findByEmail(String email);
 }
