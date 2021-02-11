@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.vapima.butjet4.BaseTest;
@@ -33,8 +33,9 @@ class UserControllerTest extends BaseTest {
     private UserRepository userRepository;
     private Long id;
 
-    public static final String NEW_USER_JSON="{\"id\":1,\"name\":\"test\",\"email\":\"test@test2.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}";
-    public static final String NEW_USER_WITH_EXIST_EMAIL_JSON="{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}";
+    public static final String NEW_USER_JSON = "{\"id\":1,\"name\":\"test\",\"email\":\"test@test2.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}";
+    public static final String NEW_USER_WITH_EXIST_EMAIL_JSON = "{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}";
+
     @BeforeAll
     void prepareData() {
         id = userRepository.save(User.builder()
@@ -42,7 +43,7 @@ class UserControllerTest extends BaseTest {
                 .name("test")
                 .hashPassword("test_password")
                 .state(State.ACTIVE)
-                .role(Role.ROLE_USER)
+                .role(Role.ROLE_ADMIN)
                 .build())
                 .getId();
     }
@@ -62,11 +63,11 @@ class UserControllerTest extends BaseTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value("test"))
                 .andExpect(jsonPath("$.email").value("test@test2.tt"))
-                .andExpect(jsonPath("$.hashPassword").value("test_password"))
                 .andReturn();
         userRepository.deleteById(Long.parseLong(new JSONObject(mvcResult.getResponse().getContentAsString()).get("id").toString()));
     }
 
+    @WithUserDetails(value = "test@test.tt")
     @SneakyThrows
     @Test
     void findUserById() {
@@ -74,11 +75,12 @@ class UserControllerTest extends BaseTest {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json("{\"id\":" + id + ",\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}"));
+                .andExpect(content().json("{\"id\":" + id + ",\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}"));
     }
 
     @SneakyThrows
     @Test
+    @WithUserDetails(value = "test@test.tt")
     void deleteUserById() {
         mockMvc.perform(delete("/users/{accountId}", id))
                 .andDo(print())
@@ -89,12 +91,14 @@ class UserControllerTest extends BaseTest {
                 .name("test")
                 .hashPassword("test_password")
                 .state(State.ACTIVE)
-                .role(Role.ROLE_USER)
-                .build());
+                .role(Role.ROLE_ADMIN)
+                .build())
+                .getId();
     }
 
     @SneakyThrows
     @Test
+    @WithUserDetails(value = "test@test.tt")
     void getListOfAllUserByStateActive() {
         mockMvc.perform(get("/users")
                 .param("state", "active")
@@ -103,24 +107,28 @@ class UserControllerTest extends BaseTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(content().json("[{\"id\":" + id + ",\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}]"));
+                .andExpect(content().json("[{\"id\":" + id + ",\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}]"));
     }
 
     @SneakyThrows
     @Test
+    @WithUserDetails(value = "test@test.tt")
     void updateUserName() {
         mockMvc.perform(patch("/users/{accountId}", id)
                 .content("{\"name\":\"test_update\"}")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json("{\"id\":" + id + ",\"name\":\"test_update\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}"));
-        mockMvc.perform(patch("/users/{accountId}", id)
-                .content("{\"name\":\"test\"}")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json("{\"id\":" + id + ",\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_USER\"}"));
+                .andExpect(content().json("{\"id\":" + id + ",\"name\":\"test_update\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}"));
+        userRepository.save(User.builder()
+                .id(id)
+                .email("test@test.tt")
+                .name("test")
+                .hashPassword("test_password")
+                .state(State.ACTIVE)
+                .role(Role.ROLE_ADMIN)
+                .build())
+                .getId();
     }
 
     @SneakyThrows

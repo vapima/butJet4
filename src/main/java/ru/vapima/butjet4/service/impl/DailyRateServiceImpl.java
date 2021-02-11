@@ -47,8 +47,8 @@ public class DailyRateServiceImpl implements DailyRateService {
 
     @Override
     public DailyRateDto getDailyRateByUserId(Long id) {
-        Long allAmountAccount = accountRepository.getSumAmountAccountsByUserIdAAndIsActive(id, false);
         Long activeAmountAccount = accountRepository.getSumAmountAccountsByUserIdAAndIsActive(id, true);
+        Long allAmountAccount = accountRepository.getSumAmountAccountsByUserIdAAndIsActive(id, false) + activeAmountAccount;
         if (allAmountAccount == null) {
             allAmountAccount = 0L;
         }

@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import ru.vapima.butjet4.config.CustomTokenAuthentication;
 import ru.vapima.butjet4.dto.plan.PlanAddDto;
 import ru.vapima.butjet4.dto.plan.PlanDto;
 import ru.vapima.butjet4.dto.plan.PlanEditDto;
@@ -25,47 +25,47 @@ public class PlanController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("#idUser.equals(#customTokenAuthentication.id)")
+    @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
     public PlanDto save(@RequestBody @Valid PlanAddDto planAddDto,
                         @PathVariable("id_user") Long idUser,
-                        CustomTokenAuthentication customTokenAuthentication) {
+                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return planService.addPlan(planAddDto, idUser);
     }
 
 
     @GetMapping("/{id}")
-    @PreAuthorize("#idUser.equals(#customTokenAuthentication.id)")
+    @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
     public PlanDto findById(@PathVariable("id") Long id,
                             @PathVariable("id_user") Long idUser,
-                            CustomTokenAuthentication customTokenAuthentication) {
+                            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return planService.getById(id, idUser);
     }
 
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("#idUser.equals(#customTokenAuthentication.id)")
+    @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
     public void delete(@PathVariable("id") Long id,
                        @PathVariable("id_user") Long idUser,
-                       CustomTokenAuthentication customTokenAuthentication) {
+                       UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         planService.deleteById(id, idUser);
     }
 
 
     @GetMapping
-    @PreAuthorize("#idUser.equals(#customTokenAuthentication.id)")
+    @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
     public List<PlanDto> list(@PageableDefault(value = 10, page = 0) Pageable pageable,
                               @PathVariable("id_user") Long idUser,
-                              CustomTokenAuthentication customTokenAuthentication) {
+                              UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return planService.getAll(idUser, pageable);
     }
 
 
     @PatchMapping("/{id}")
-    @PreAuthorize("#idUser.equals(#customTokenAuthentication.id)")
+    @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
     public PlanDto update(@RequestBody @Valid PlanEditDto planEditDto,
                           @PathVariable("id") Long id,
                           @PathVariable("id_user") Long idUser,
-                          CustomTokenAuthentication customTokenAuthentication) {
+                          UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return planService.updatePlan(planEditDto, id, idUser);
     }
 }

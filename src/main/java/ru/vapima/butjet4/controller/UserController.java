@@ -5,24 +5,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import ru.vapima.butjet4.config.CustomTokenAuthentication;
 import ru.vapima.butjet4.dto.user.UserDto;
 import ru.vapima.butjet4.dto.user.UserEditDto;
 import ru.vapima.butjet4.dto.user.UserRegistartionDto;
-import ru.vapima.butjet4.model.db.User;
 import ru.vapima.butjet4.service.UserService;
 
-
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 
@@ -40,30 +31,32 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("#id.equals(#customTokenAuthentication.id)")
-    public UserDto findById(@PathVariable("id") Long id, CustomTokenAuthentication customTokenAuthentication) {
+    @PreAuthorize("#id.equals(#usernamePasswordAuthenticationToken.principal.id)")
+    public UserDto findById(@PathVariable("id") Long id,
+                            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return userService.getById(id);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("#id.equals(#customTokenAuthentication.id)")
-    public void delete(@PathVariable("id") Long id, CustomTokenAuthentication customTokenAuthentication) {
+    @PreAuthorize("#id.equals(#usernamePasswordAuthenticationToken.principal.id)")
+    public void delete(@PathVariable("id") Long id,
+                       UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         userService.deleteById(id);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<UserDto> list(@PageableDefault(value = 10, page = 0) Pageable pageable,
+    public List<UserDto> list(@PageableDefault Pageable pageable,
                               @RequestParam(value = "state", required = false, defaultValue = "ACTIVE") String state) {
         return userService.getAll(state, pageable);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}")
-    @PreAuthorize("#id.equals(#customTokenAuthentication.id)")
+    @PreAuthorize("#id.equals(#usernamePasswordAuthenticationToken.principal.id)")
     public UserDto update(@RequestBody @Valid UserEditDto userEditDto,
                           @PathVariable("id") Long id,
-                          CustomTokenAuthentication customTokenAuthentication) {
+                          UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return userService.updateUser(userEditDto, id);
     }
 }
