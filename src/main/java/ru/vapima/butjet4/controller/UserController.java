@@ -2,6 +2,7 @@ package ru.vapima.butjet4.controller;
 
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/users")
 @RestController
 @AllArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -27,6 +29,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto save(@RequestBody @Valid UserRegistartionDto userRegistartionDto) {
+        log.info("New User: " + userRegistartionDto.getEmail());
         return userService.addUser(userRegistartionDto);
     }
 

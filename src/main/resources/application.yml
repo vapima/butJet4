@@ -27,3 +27,23 @@ spring:
 
   main:
     allow-bean-definition-overriding: true
+    banner-mode: off
+  output:
+    ansi:
+      enabled: always
+logging:
+  file:
+    path: logs/dev_app.log
+    max-size: 10MB
+    max-history: 7
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    org.springframework.web: DEBUG
+    guru.springframework.controllers: DEBUG
+    org.hibernate: DEBUG
+    ru.vapima.butjet4: TRACE
+
+
+
