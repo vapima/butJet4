@@ -1,1 +1,0 @@
-TRUNCATE account_records, accounts, plans, users;
