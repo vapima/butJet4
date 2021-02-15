@@ -1,9 +1,6 @@
 package ru.vapima.butjet4.controller;
 
 import lombok.SneakyThrows;
-import org.json.JSONObject;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import ru.vapima.butjet4.BaseTest;
-import ru.vapima.butjet4.model.db.Role;
-import ru.vapima.butjet4.model.db.State;
-import ru.vapima.butjet4.model.db.User;
-import ru.vapima.butjet4.repository.UserRepository;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -34,7 +26,7 @@ class UserControllerTest extends BaseTest {
 
     public static final String NEW_USER_JSON = "{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}";
     public static final String NEW_USER_WITH_EXIST_EMAIL_JSON = "{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}";
-    public static final String REQUEST_FIND_ALL_USERS_ARRAY="[{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"$2a$10$ISmet2jVjPpUMp7xVRasTe1q4x0F5H3y4dffJ0/yX4iOQ9JFQxdzq\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}]";
+    public static final String REQUEST_FIND_ALL_USERS_ARRAY = "[{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"$2a$10$ISmet2jVjPpUMp7xVRasTe1q4x0F5H3y4dffJ0/yX4iOQ9JFQxdzq\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}]";
 
 
     @SneakyThrows
