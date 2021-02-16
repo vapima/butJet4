@@ -21,7 +21,7 @@ public class DailyRateController {
 
     @GetMapping
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public DailyRateDto findById(@PathVariable("id_user") Long idUser,
+    public DailyRateDto takeRate(@PathVariable("id_user") Long idUser,
                                  UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return dailyRateService.getDailyRateByUserId(idUser);
     }

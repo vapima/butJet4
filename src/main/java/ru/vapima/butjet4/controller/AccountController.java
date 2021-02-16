@@ -25,7 +25,7 @@ public class AccountController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public AccountDto save(@RequestBody @Valid AccountAddDto accountAddDto,
+    public AccountDto saveAccount(@RequestBody @Valid AccountAddDto accountAddDto,
                            @PathVariable("id_user") Long idUser,
                            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return accountService.addAccount(accountAddDto, idUser);
@@ -34,7 +34,7 @@ public class AccountController {
 
     @GetMapping("/{id}")
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public AccountDto findById(@PathVariable("id") Long id,
+    public AccountDto findAccountById(@PathVariable("id") Long id,
                                @PathVariable("id_user") Long idUser,
                                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return accountService.getById(id, idUser);
@@ -43,7 +43,7 @@ public class AccountController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public void delete(@PathVariable("id") Long id,
+    public void deleteAccount(@PathVariable("id") Long id,
                        @PathVariable("id_user") Long idUser,
                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         accountService.deleteById(id, idUser);
@@ -52,7 +52,7 @@ public class AccountController {
 
     @GetMapping
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public List<AccountDto> list(@PageableDefault(value = 10, page = 0) Pageable pageable,
+    public List<AccountDto> listAccounts(@PageableDefault(value = 10, page = 0) Pageable pageable,
                                  @PathVariable("id_user") Long idUser,
                                  UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return accountService.getAll(idUser, pageable);
@@ -61,7 +61,7 @@ public class AccountController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public AccountDto update(@RequestBody @Valid AccountEditDto accountEditDto,
+    public AccountDto updateAccount(@RequestBody @Valid AccountEditDto accountEditDto,
                              @PathVariable("id") Long id,
                              @PathVariable("id_user") Long idUser,
                              UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {

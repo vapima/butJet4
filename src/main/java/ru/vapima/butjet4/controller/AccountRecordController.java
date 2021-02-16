@@ -26,7 +26,7 @@ public class AccountRecordController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public AccountRecordDto save(@RequestBody @Valid AccountRecordAddDto accountRecordAddDto,
+    public AccountRecordDto saveAccountRecord(@RequestBody @Valid AccountRecordAddDto accountRecordAddDto,
                                  @PathVariable("id_acc") Long idAccount,
                                  @PathVariable("id_user") Long idUser,
                                  UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
@@ -36,7 +36,7 @@ public class AccountRecordController {
 
     @GetMapping("/{id}")
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public AccountRecordDto findById(@PathVariable("id") Long id,
+    public AccountRecordDto findAccountRecordById(@PathVariable("id") Long id,
                                      @PathVariable("id_acc") Long idAccount,
                                      @PathVariable("id_user") Long idUser,
                                      UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
@@ -46,7 +46,7 @@ public class AccountRecordController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public void delete(@PathVariable("id") Long id,
+    public void deleteAccountRecord(@PathVariable("id") Long id,
                        @PathVariable("id_acc") Long idAccount,
                        @PathVariable("id_user") Long idUser,
                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
@@ -56,7 +56,7 @@ public class AccountRecordController {
 
     @GetMapping
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public List<AccountRecordDto> list(@PageableDefault(value = 10, page = 0) Pageable pageable,
+    public List<AccountRecordDto> listAccountRecords(@PageableDefault(value = 10, page = 0) Pageable pageable,
                                        @PathVariable("id_acc") Long idAccount,
                                        @PathVariable("id_user") Long idUser,
                                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
@@ -67,7 +67,7 @@ public class AccountRecordController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}")
     @PreAuthorize("#id.equals(#customTokenAuthentication.id)")
-    public AccountRecordDto update(@RequestBody @Valid AccountRecordEditDto accountRecordEditDto,
+    public AccountRecordDto updateAccountRecord(@RequestBody @Valid AccountRecordEditDto accountRecordEditDto,
                                    @PathVariable("id") Long id,
                                    @PathVariable("id_acc") Long idAccount,
                                    @PathVariable("id_user") Long idUser,

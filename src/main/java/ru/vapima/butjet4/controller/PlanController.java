@@ -26,7 +26,7 @@ public class PlanController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public PlanDto save(@RequestBody @Valid PlanAddDto planAddDto,
+    public PlanDto savePlan(@RequestBody @Valid PlanAddDto planAddDto,
                         @PathVariable("id_user") Long idUser,
                         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return planService.addPlan(planAddDto, idUser);
@@ -35,7 +35,7 @@ public class PlanController {
 
     @GetMapping("/{id}")
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public PlanDto findById(@PathVariable("id") Long id,
+    public PlanDto findPlanById(@PathVariable("id") Long id,
                             @PathVariable("id_user") Long idUser,
                             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return planService.getById(id, idUser);
@@ -44,7 +44,7 @@ public class PlanController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public void delete(@PathVariable("id") Long id,
+    public void deletePlan(@PathVariable("id") Long id,
                        @PathVariable("id_user") Long idUser,
                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         planService.deleteById(id, idUser);
@@ -53,7 +53,7 @@ public class PlanController {
 
     @GetMapping
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public List<PlanDto> list(@PageableDefault(value = 10, page = 0) Pageable pageable,
+    public List<PlanDto> listPlans(@PageableDefault(value = 10, page = 0) Pageable pageable,
                               @PathVariable("id_user") Long idUser,
                               UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return planService.getAll(idUser, pageable);
@@ -62,7 +62,7 @@ public class PlanController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public PlanDto update(@RequestBody @Valid PlanEditDto planEditDto,
+    public PlanDto updatePlan(@RequestBody @Valid PlanEditDto planEditDto,
                           @PathVariable("id") Long id,
                           @PathVariable("id_user") Long idUser,
                           UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {

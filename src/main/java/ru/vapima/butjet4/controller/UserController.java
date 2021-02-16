@@ -28,28 +28,28 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto save(@RequestBody @Valid UserRegistartionDto userRegistartionDto) {
+    public UserDto saveUser(@RequestBody @Valid UserRegistartionDto userRegistartionDto) {
         log.info("New User: " + userRegistartionDto.getEmail());
         return userService.addUser(userRegistartionDto);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("#id.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public UserDto findById(@PathVariable("id") Long id,
+    public UserDto findUserById(@PathVariable("id") Long id,
                             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return userService.getById(id);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("#id.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public void delete(@PathVariable("id") Long id,
+    public void deleteUser(@PathVariable("id") Long id,
                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         userService.deleteById(id);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<UserDto> list(@PageableDefault Pageable pageable,
+    public List<UserDto> listUsers(@PageableDefault Pageable pageable,
                               @RequestParam(value = "state", required = false, defaultValue = "ACTIVE") String state) {
         return userService.getAll(state, pageable);
     }
@@ -57,7 +57,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}")
     @PreAuthorize("#id.equals(#usernamePasswordAuthenticationToken.principal.id)")
-    public UserDto update(@RequestBody @Valid UserEditDto userEditDto,
+    public UserDto updateUser(@RequestBody @Valid UserEditDto userEditDto,
                           @PathVariable("id") Long id,
                           UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
         return userService.updateUser(userEditDto, id);
