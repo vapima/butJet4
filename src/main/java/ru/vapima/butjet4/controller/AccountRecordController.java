@@ -66,7 +66,7 @@ public class AccountRecordController {
 
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}")
-    @PreAuthorize("#id.equals(#customTokenAuthentication.id)")
+    @PreAuthorize("#idUser.equals(#usernamePasswordAuthenticationToken.principal.id)")
     public AccountRecordDto updateAccountRecord(@RequestBody @Valid AccountRecordEditDto accountRecordEditDto,
                                    @PathVariable("id") Long id,
                                    @PathVariable("id_acc") Long idAccount,
