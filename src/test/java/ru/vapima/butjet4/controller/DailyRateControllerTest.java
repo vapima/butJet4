@@ -22,8 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class DailyRateControllerTest extends BaseTest {
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private UserRepository userRepository;
 
 
     @WithUserDetails(value = "test@user.io")
