@@ -27,13 +27,13 @@ class UserControllerTest extends BaseTest {
     public static final String NEW_USER_JSON = "{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}";
     public static final String NEW_USER_WITH_EXIST_EMAIL_JSON = "{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"test_password\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}";
     public static final String REQUEST_FIND_ALL_USERS_ARRAY = "[{\"id\":1,\"name\":\"test\",\"email\":\"test@test.tt\",\"hashPassword\":\"$2a$10$ISmet2jVjPpUMp7xVRasTe1q4x0F5H3y4dffJ0/yX4iOQ9JFQxdzq\",\"state\":\"ACTIVE\",\"role\":\"ROLE_ADMIN\"}]";
-
+    public static final String ENDPOINT ="/users";
 
     @SneakyThrows
     @Test
     @Sql(scripts = {"/delete_tables.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void saveNewUser() {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post(ENDPOINT)
                 .content(NEW_USER_JSON)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -48,7 +48,7 @@ class UserControllerTest extends BaseTest {
     @Sql(scripts = {"/test_user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"/delete_tables.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findUserById() {
-        mockMvc.perform(get("/users/{accountId}", 1)
+        mockMvc.perform(get(ENDPOINT+"/{userId}", 1)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -63,7 +63,7 @@ class UserControllerTest extends BaseTest {
     @Sql(scripts = {"/test_user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"/delete_tables.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void deleteUserById() {
-        mockMvc.perform(delete("/users/{accountId}", 1))
+        mockMvc.perform(delete(ENDPOINT+"/{userId}", 1))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
@@ -74,7 +74,7 @@ class UserControllerTest extends BaseTest {
     @Sql(scripts = {"/test_user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"/delete_tables.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void getListOfAllUserByStateActive() {
-        mockMvc.perform(get("/users")
+        mockMvc.perform(get(ENDPOINT)
                 .param("state", "active")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -90,7 +90,7 @@ class UserControllerTest extends BaseTest {
     @Sql(scripts = {"/test_user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"/delete_tables.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void updateUserName() {
-        mockMvc.perform(patch("/users/{accountId}", 1)
+        mockMvc.perform(patch(ENDPOINT+"/{userId}", 1)
                 .content("{\"name\":\"test_update\"}")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -105,7 +105,7 @@ class UserControllerTest extends BaseTest {
     @Sql(scripts = {"/test_user.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"/delete_tables.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void saveNewUserWithExistEmailShouldBeError() {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post(ENDPOINT)
                 .content(NEW_USER_WITH_EXIST_EMAIL_JSON)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())

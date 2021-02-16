@@ -28,15 +28,16 @@ class PlanControllerTest extends BaseTest {
     @Autowired
     private MockMvc mockMvc;
 
-    public static final String NEW_ACCOUNT_JSON="{\"name\":\"test_plan\",\"amount\":100,\"expirationDate\":\"2030-06-01\"}";
+    public static final String NEW_PLAN_JSON="{\"name\":\"test_plan\",\"amount\":100,\"expirationDate\":\"2030-06-01\"}";
     public static final String REQUEST_FIND_ALL_PLANS_ARRAY = "[{\"id\":1,\"name\":\"test_plan\",\"amount\":100,\"expirationDate\":\"2030-06-01\"}]";
+    public static final String ENDPOINT="/users/1/plans";
 
     @WithUserDetails(value = "test@test.tt")
     @SneakyThrows
     @Test
     void savePlan() {
-        mockMvc.perform(post("/users/1/plans")
-                .content(NEW_ACCOUNT_JSON)
+        mockMvc.perform(post(ENDPOINT)
+                .content(NEW_PLAN_JSON)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -49,10 +50,11 @@ class PlanControllerTest extends BaseTest {
     @SneakyThrows
     @Test
     void findPlanById() {
-        mockMvc.perform(get("/users/1/plans/{planId}", 1)
+        mockMvc.perform(get(ENDPOINT+"/{planId}", 1)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("test_plan"))
                 .andExpect(jsonPath("$.amount").value(100))
                 .andExpect(jsonPath("$.expirationDate").value("2030-06-01"));
@@ -62,7 +64,7 @@ class PlanControllerTest extends BaseTest {
     @SneakyThrows
     @Test
     void deletePlan() {
-        mockMvc.perform(delete("/users/1/plans/{planId}", 1))
+        mockMvc.perform(delete(ENDPOINT+"/{planId}", 1))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
     }
@@ -71,8 +73,7 @@ class PlanControllerTest extends BaseTest {
     @SneakyThrows
     @Test
     void listPlan() {
-        mockMvc.perform(get("/users/1/plans")
-                .param("state", "active")
+        mockMvc.perform(get(ENDPOINT)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
@@ -85,7 +86,7 @@ class PlanControllerTest extends BaseTest {
     @SneakyThrows
     @Test
     void updatePlan() {
-        mockMvc.perform(patch("/users/1/plans/{planId}", 1)
+        mockMvc.perform(patch(ENDPOINT+"/{planId}", 1)
                 .content("{\"name\":\"test_update\"}")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
